@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Juego de Energía</title>
+  <meta charset="UTF-8">
+  <title>¿Quién necesita energía?</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="game-container">
-    <h1>⚡ Arrastra la energía</h1>
-    <p class="subtitle">Coloca la batería en el objeto que la necesita</p>
+<div class="scene">
+  <div class="card">
+    <h1>⚡ ¿Quién necesita energía?</h1>
+    <p id="level-text">Nivel 1: Objetos cotidianos</p>
 
-    <div class="hearts">
-      ❤️ <span id="points">100</span>
+    <div class="hearts">❤️ <span id="hearts">100</span></div>
+
+    <div class="objects" id="objects"></div>
+
+    <div class="battery-zone">
+      <p>Arrastra la batería</p>
+      <div class="battery" draggable="true" id="battery">🔋</div>
     </div>
-
-    <div class="room">
-      <div class="object" data-energy="no">🪑<span>Silla</span></div>
-      <div class="object" data-energy="no">🚲<span>Bicicleta</span></div>
-      <div class="object correct" data-energy="yes">🚗<span>Carro</span></div>
-    </div>
-
-    <div class="battery" draggable="true" id="battery">🔋</div>
 
     <div id="message"></div>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

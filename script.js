@@ -1,32 +1,69 @@
-let points = 100;
-const minPoints = 50;
-const maxPoints = 100;
+let hearts = 100;
+let level = 1;
 
-const pointsEl = document.getElementById("points");
+const heartsEl = document.getElementById("hearts");
+const objectsEl = document.getElementById("objects");
 const messageEl = document.getElementById("message");
+const levelText = document.getElementById("level-text");
 const battery = document.getElementById("battery");
-const objects = document.querySelectorAll(".object");
+
+const levels = {
+  1: {
+    text: "Nivel 1: Objetos cotidianos",
+    objects: [
+      { icon: "🪑", name: "Silla", energy: false },
+      { icon: "🚲", name: "Bicicleta", energy: false },
+      { icon: "🚗", name: "Carro", energy: true }
+    ]
+  },
+  2: {
+    text: "Nivel 2: Objetos eléctricos",
+    objects: [
+      { icon: "📺", name: "Televisor", energy: true },
+      { icon: "💡", name: "Lámpara", energy: true },
+      { icon: "📚", name: "Libro", energy: false }
+    ]
+  }
+};
 
 battery.addEventListener("dragstart", e => {
-  e.dataTransfer.setData("text", "battery");
+  e.dataTransfer.setData("text/plain", "battery");
 });
 
-objects.forEach(obj => {
-  obj.addEventListener("dragover", e => e.preventDefault());
+function loadLevel() {
+  objectsEl.innerHTML = "";
+  levelText.textContent = levels[level].text;
+  messageEl.textContent = "";
 
-  obj.addEventListener("drop", () => {
-    const needsEnergy = obj.dataset.energy === "yes";
+  levels[level].objects.forEach(obj => {
+    const div = document.createElement("div");
+    div.className = "object";
+    div.innerHTML = `${obj.icon}<span>${obj.name}</span>`;
+    div.dataset.energy = obj.energy;
 
-    if (needsEnergy) {
-      points = Math.min(points + 10, maxPoints);
-      messageEl.textContent = "✅ ¡Correcto! El carro necesita energía.";
-      messageEl.style.color = "green";
-    } else {
-      points = Math.max(points - 10, minPoints);
-      messageEl.textContent = "❌ Incorrecto. Este objeto no necesita energía.";
-      messageEl.style.color = "red";
-    }
+    div.addEventListener("dragover", e => e.preventDefault());
 
-    pointsEl.textContent = points;
+    div.addEventListener("drop", () => handleDrop(obj.energy));
+
+    objectsEl.appendChild(div);
   });
-});
+}
+
+function handleDrop(needsEnergy) {
+  if (needsEnergy) {
+    messageEl.textContent = "✅ Correcto. Este objeto necesita energía.";
+    messageEl.style.color = "green";
+
+    if (level === 1) {
+      level = 2;
+      setTimeout(loadLevel, 1200);
+    }
+  } else {
+    hearts -= 10;
+    heartsEl.textContent = hearts;
+    messageEl.textContent = "❌ Incorrecto. Este objeto no necesita energía.";
+    messageEl.style.color = "red";
+  }
+}
+
+loadLevel();

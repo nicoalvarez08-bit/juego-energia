@@ -1,63 +1,66 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #7f3fbf, #3b1c5a);
-  height: 100vh;
+  font-family: "Comic Sans MS", Arial, sans-serif;
+  background: linear-gradient(135deg, #6a5acd, #9370db);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.scene {
-  perspective: 1000px;
-}
-
-.card {
-  background: white;
-  width: 700px;
-  padding: 30px;
-  border-radius: 25px;
+.game-container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 700px;
+  padding: 20px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-  transform: rotateX(5deg);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 h1 {
-  color: #5e2b97;
-  margin-bottom: 5px;
+  color: #6a5acd;
 }
 
-#level-text {
-  color: #555;
-  font-size: 15px;
+.info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
-.hearts {
-  font-size: 20px;
-  margin: 15px 0;
+.instruction {
+  font-size: 16px;
+  margin-bottom: 15px;
 }
 
-.objects {
+.battery-zone {
+  margin-bottom: 20px;
+}
+
+#battery {
+  font-size: 60px;
+  cursor: grab;
+}
+
+.objects-zone {
   display: flex;
   justify-content: space-around;
-  margin: 30px 0;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .object {
-  background: linear-gradient(145deg, #f0f0f0, #cacaca);
-  width: 150px;
-  height: 150px;
-  border-radius: 20px;
-  box-shadow:
-    8px 8px 15px rgba(0,0,0,0.2),
-    -8px -8px 15px rgba(255,255,255,0.9);
+  width: 140px;
+  height: 140px;
+  background: #f0f0ff;
+  border-radius: 15px;
+  font-size: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 45px;
-  cursor: pointer;
-  transition: transform 0.3s;
+  border: 3px dashed #9370db;
 }
 
 .object span {
@@ -65,28 +68,8 @@ h1 {
   margin-top: 5px;
 }
 
-.object:hover {
-  transform: translateY(-10px) scale(1.05);
-}
-
-.battery-zone {
-  margin-top: 10px;
-}
-
-.battery {
-  font-size: 60px;
-  cursor: grab;
-  animation: float 2s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
-}
-
-#message {
-  margin-top: 20px;
+.message {
+  margin-top: 15px;
   font-size: 18px;
-  font-weight: bold;
+  min-height: 24px;
 }

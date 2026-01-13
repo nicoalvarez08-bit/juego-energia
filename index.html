@@ -7,24 +7,27 @@
 </head>
 <body>
 
-<div class="scene">
-  <div class="card">
+  <div class="game-container">
     <h1>⚡ ¿Quién necesita energía?</h1>
-    <p id="level-text">Nivel 1: Objetos cotidianos</p>
 
-    <div class="hearts">❤️ <span id="hearts">100</span></div>
-
-    <div class="objects" id="objects"></div>
-
-    <div class="battery-zone">
-      <p>Arrastra la batería</p>
-      <div class="battery" draggable="true" id="battery">🔋</div>
+    <div class="info">
+      <span id="level-text">Nivel 1</span>
+      <span>❤️ Corazones: <strong id="hearts">100</strong></span>
     </div>
 
-    <div id="message"></div>
-  </div>
-</div>
+    <p class="instruction">
+      Arrastra la batería al objeto que necesita energía para funcionar
+    </p>
 
-<script src="script.js"></script>
+    <div class="battery-zone">
+      <div id="battery" draggable="true">🔋</div>
+    </div>
+
+    <div id="objects" class="objects-zone"></div>
+
+    <div id="message" class="message"></div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

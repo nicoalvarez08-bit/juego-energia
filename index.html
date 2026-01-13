@@ -1,33 +1,76 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>¿Quién necesita energía?</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+body {
+  margin: 0;
+  font-family: "Comic Sans MS", Arial, sans-serif;
+  background: linear-gradient(135deg, #6a5acd, #9370db);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  <div class="game-container">
-    <h1>⚡ ¿Quién necesita energía?</h1>
+.game-container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 700px;
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
 
-    <div class="info">
-      <span id="level-text">Nivel 1</span>
-      <span>❤️ Corazones: <strong id="hearts">100</strong></span>
-    </div>
+h1 {
+  color: #6a5acd;
+}
 
-    <p class="instruction">
-      Arrastra la batería al objeto que necesita energía para funcionar
-    </p>
+.info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 
-    <div class="battery-zone">
-      <div id="battery" draggable="true">🔋</div>
-    </div>
+.instruction {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
 
-    <div id="objects" class="objects-zone"></div>
+.battery-zone {
+  margin-bottom: 20px;
+}
 
-    <div id="message" class="message"></div>
-  </div>
+#battery {
+  font-size: 60px;
+  cursor: grab;
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+.objects-zone {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.object {
+  width: 140px;
+  height: 140px;
+  background: #f0f0ff;
+  border-radius: 15px;
+  font-size: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 3px dashed #9370db;
+  cursor: pointer;
+}
+
+.object span {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.message {
+  margin-top: 15px;
+  font-size: 18px;
+  min-height: 24px;
+}

@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #6a5acd, #8a2be2); /* azul amorado */
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.juego-container {
+  padding: 20px;
+}
+
+.sala {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px 0;
+}
+
+.objeto {
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  width: 150px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.objeto img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.bateria-container {
+  margin-top: 20px;
+}
+
+#bateria {
+  width: 100px;
+  cursor: grab;
+}
+
+#mensaje {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}

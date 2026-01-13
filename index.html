@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arrastra la Energía</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="juego-container">
+    <h1>Arrastra la energía a los objetos correctos</h1>
+    <p>Vidas: <span id="vidas">100</span> ❤️</p>
+
+    <div class="sala">
+      <div class="objeto" id="silla" data-necesita="no">
+        <img src="recursos/silla.png" alt="Silla">
+        <p>Silla</p>
+      </div>
+
+      <div class="objeto" id="bicicleta" data-necesita="no">
+        <img src="recursos/bicicleta.png" alt="Bicicleta">
+        <p>Bicicleta</p>
+      </div>
+
+      <div class="objeto" id="carro" data-necesita="si">
+        <img src="recursos/carro.png" alt="Carro">
+        <p>Carro</p>
+      </div>
+    </div>
+
+    <div class="bateria-container">
+      <img src="recursos/bateria.png" id="bateria" draggable="true">
+    </div>
+
+    <div id="mensaje"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

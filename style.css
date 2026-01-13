@@ -1,50 +1,71 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #6a5acd, #8a2be2); /* azul amorado */
-  color: white;
-  text-align: center;
   margin: 0;
-  padding: 0;
-}
-
-.juego-container {
-  padding: 20px;
-}
-
-.sala {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
   display: flex;
-  justify-content: space-around;
-  margin: 30px 0;
-}
-
-.objeto {
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 10px;
-  width: 150px;
-  height: 200px;
-  background-color: rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  height: 100vh;
+}
+
+.game-container {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1 {
+  margin: 0;
+  color: #4e54c8;
+}
+
+.subtitle {
+  color: #555;
+}
+
+.hearts {
+  font-size: 22px;
+  margin: 15px 0;
+}
+
+.room {
+  display: flex;
   justify-content: space-around;
+  margin: 25px 0;
 }
 
-.objeto img {
-  max-width: 100px;
-  max-height: 100px;
+.object {
+  font-size: 50px;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 
-.bateria-container {
-  margin-top: 20px;
+.object span {
+  display: block;
+  font-size: 14px;
 }
 
-#bateria {
-  width: 100px;
+.object:hover {
+  transform: scale(1.2);
+}
+
+.battery {
+  font-size: 60px;
   cursor: grab;
+  animation: float 2s infinite ease-in-out;
 }
 
-#mensaje {
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+#message {
   margin-top: 20px;
   font-size: 18px;
   font-weight: bold;

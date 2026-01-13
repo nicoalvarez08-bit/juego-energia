@@ -1,46 +1,32 @@
-let bateria = document.getElementById("bateria");
-let objetos = document.querySelectorAll(".objeto");
-let mensaje = document.getElementById("mensaje");
-let vidas = 100;
-let intentos = {}; // para controlar intentos por objeto
+let points = 100;
+const minPoints = 50;
+const maxPoints = 100;
 
-document.getElementById("vidas").textContent = vidas;
+const pointsEl = document.getElementById("points");
+const messageEl = document.getElementById("message");
+const battery = document.getElementById("battery");
+const objects = document.querySelectorAll(".object");
 
-// Drag & Drop
-bateria.addEventListener("dragstart", (e) => {
-  e.dataTransfer.setData("text", e.target.id);
+battery.addEventListener("dragstart", e => {
+  e.dataTransfer.setData("text", "battery");
 });
 
-objetos.forEach(obj => {
-  obj.addEventListener("dragover", (e) => {
-    e.preventDefault();
-  });
+objects.forEach(obj => {
+  obj.addEventListener("dragover", e => e.preventDefault());
 
-  obj.addEventListener("drop", (e) => {
-    e.preventDefault();
-    let idBateria = e.dataTransfer.getData("text");
-    let necesita = obj.getAttribute("data-necesita");
-    
-    if (!intentos[obj.id]) intentos[obj.id] = 1;
-    else intentos[obj.id]++;
+  obj.addEventListener("drop", () => {
+    const needsEnergy = obj.dataset.energy === "yes";
 
-    if (necesita === "si") {
-      if (intentos[obj.id] === 1) {
-        mensaje.textContent = "¡Correcto al primer intento!";
-        // vidas no cambian si ya tiene 100
-      } else if (intentos[obj.id] === 2) {
-        mensaje.textContent = "¡Correcto al segundo intento!";
-        vidas += 10;
-        if (vidas > 100) vidas = 100;
-      }
+    if (needsEnergy) {
+      points = Math.min(points + 10, maxPoints);
+      messageEl.textContent = "✅ ¡Correcto! El carro necesita energía.";
+      messageEl.style.color = "green";
     } else {
-      mensaje.textContent = "¡Incorrecto!";
-      if (intentos[obj.id] === 1) {
-        vidas -= 10;
-        if (vidas < 0) vidas = 0;
-      }
+      points = Math.max(points - 10, minPoints);
+      messageEl.textContent = "❌ Incorrecto. Este objeto no necesita energía.";
+      messageEl.style.color = "red";
     }
 
-    document.getElementById("vidas").textContent = vidas;
+    pointsEl.textContent = points;
   });
 });

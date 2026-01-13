@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arrastra la Energía</title>
+  <meta charset="UTF-8" />
+  <title>Juego de Energía</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="juego-container">
-    <h1>Arrastra la energía a los objetos correctos</h1>
-    <p>Vidas: <span id="vidas">100</span> ❤️</p>
 
-    <div class="sala">
-      <div class="objeto" id="silla" data-necesita="no">
-        <img src="recursos/silla.png" alt="Silla">
-        <p>Silla</p>
-      </div>
+  <div class="game-container">
+    <h1>⚡ Arrastra la energía</h1>
+    <p class="subtitle">Coloca la batería en el objeto que la necesita</p>
 
-      <div class="objeto" id="bicicleta" data-necesita="no">
-        <img src="recursos/bicicleta.png" alt="Bicicleta">
-        <p>Bicicleta</p>
-      </div>
-
-      <div class="objeto" id="carro" data-necesita="si">
-        <img src="recursos/carro.png" alt="Carro">
-        <p>Carro</p>
-      </div>
+    <div class="hearts">
+      ❤️ <span id="points">100</span>
     </div>
 
-    <div class="bateria-container">
-      <img src="recursos/bateria.png" id="bateria" draggable="true">
+    <div class="room">
+      <div class="object" data-energy="no">🪑<span>Silla</span></div>
+      <div class="object" data-energy="no">🚲<span>Bicicleta</span></div>
+      <div class="object correct" data-energy="yes">🚗<span>Carro</span></div>
     </div>
 
-    <div id="mensaje"></div>
+    <div class="battery" draggable="true" id="battery">🔋</div>
+
+    <div id="message"></div>
   </div>
 
   <script src="script.js"></script>

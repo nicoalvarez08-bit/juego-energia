@@ -1,5 +1,6 @@
 let hearts = 100;
 let level = 1;
+let levelCompleted = false;
 
 const heartsEl = document.getElementById("hearts");
 const objectsEl = document.getElementById("objects");
@@ -26,14 +27,16 @@ const levels = {
   }
 };
 
-battery.addEventListener("dragstart", e => {
+battery.addEventListener("dragstart", (e) => {
   e.dataTransfer.setData("text/plain", "battery");
 });
 
 function loadLevel() {
+  levelCompleted = false;
   objectsEl.innerHTML = "";
-  levelText.textContent = levels[level].text;
   messageEl.textContent = "";
+  levelText.textContent = levels[level].text;
+  heartsEl.textContent = hearts;
 
   levels[level].objects.forEach(obj => {
     const div = document.createElement("div");
@@ -43,7 +46,10 @@ function loadLevel() {
 
     div.addEventListener("dragover", e => e.preventDefault());
 
-    div.addEventListener("drop", () => handleDrop(obj.energy));
+    div.addEventListener("drop", () => {
+      if (levelCompleted) return;
+      handleDrop(obj.energy);
+    });
 
     objectsEl.appendChild(div);
   });
@@ -51,17 +57,26 @@ function loadLevel() {
 
 function handleDrop(needsEnergy) {
   if (needsEnergy) {
-    messageEl.textContent = "✅ Correcto. Este objeto necesita energía.";
+    levelCompleted = true;
+    messageEl.textContent = "✅ ¡Correcto! Nivel completado.";
     messageEl.style.color = "green";
 
     if (level === 1) {
-      level = 2;
-      setTimeout(loadLevel, 1200);
+      setTimeout(() => {
+        level = 2;
+        loadLevel();
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        messageEl.textContent = "🎉 ¡Muy bien! Completaste el juego.";
+      }, 1500);
     }
+
   } else {
     hearts -= 10;
     heartsEl.textContent = hearts;
-    messageEl.textContent = "❌ Incorrecto. Este objeto no necesita energía.";
+    messageEl.textContent =
+      "❌ Incorrecto. Este objeto no necesita energía.";
     messageEl.style.color = "red";
   }
 }

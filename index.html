@@ -7,25 +7,38 @@
 </head>
 <body>
 
-  <div class="game-container">
-    <h1>⚡ ¿Quién necesita energía?</h1>
+<div class="game-container">
 
-    <div class="info">
-      <span id="level-text">Nivel 1</span>
-      <span>❤️ Corazones: <strong id="hearts">100</strong></span>
-    </div>
-
-    <p id="instruction" class="instruction"></p>
-
-    <div id="energy-zone" class="battery-zone">
-      <div id="battery" draggable="true">🔋</div>
-    </div>
-
-    <div id="objects" class="objects-zone"></div>
-
-    <div id="message" class="message"></div>
+  <!-- PANTALLA NOMBRE -->
+  <div id="nameScreen">
+    <h1>⚡ Juego de Energía</h1>
+    <p>Escribe tu nombre para empezar</p>
+    <input type="text" id="usernameInput" placeholder="Tu nombre">
+    <button onclick="startGame()">Comenzar</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- JUEGO -->
+  <div id="gameScreen" class="hidden">
+    <div class="info">
+      <span>❤️ Corazones: <b id="hearts">100</b></span>
+    </div>
+
+    <h2 id="instruction"></h2>
+
+    <div class="objects-zone" id="objectsZone"></div>
+
+    <p class="message" id="message"></p>
+  </div>
+
+  <!-- RANKING -->
+  <div id="rankingScreen" class="hidden">
+    <h2>🏆 Ranking</h2>
+    <ul id="rankingList"></ul>
+    <button onclick="location.reload()">Volver a jugar</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

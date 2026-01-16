@@ -1,98 +1,138 @@
-let hearts = 100;
-let level = 1;
-let locked = false;
+/*********** CONFIG SUPABASE ***********/
+const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
 
-const heartsEl = document.getElementById("hearts");
-const objectsEl = document.getElementById("objects");
-const messageEl = document.getElementById("message");
-const levelText = document.getElementById("level-text");
-const battery = document.getElementById("battery");
-const instruction = document.getElementById("instruction");
-const energyZone = document.getElementById("energy-zone");
 
-const levels = {
-  1: {
-    title: "Nivel 1: ¿Quién necesita energía?",
-    mode: "drag",
-    instruction: "Arrastra la batería al objeto que necesita energía",
-    objects: [
-      { icon: "🪑", name: "Silla", needsEnergy: false },
-      { icon: "🚲", name: "Bicicleta", needsEnergy: false },
-      { icon: "🚗", name: "Carro", needsEnergy: true }
-    ]
-  },
-  2: {
-    title: "Nivel 2: ¿Quién NO necesita energía?",
-    mode: "click",
-    instruction: "Haz clic en el objeto que NO necesita energía",
-    objects: [
-      { icon: "📺", name: "Televisor", needsEnergy: true },
-      { icon: "💡", name: "Lámpara", needsEnergy: true },
-      { icon: "📖", name: "Libro", needsEnergy: false }
-    ]
-  }
+const headers = {
+  "apikey": SUPABASE_ANON_KEY,
+  "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+  "Content-Type": "application/json"
 };
 
-battery.addEventListener("dragstart", e => {
-  e.dataTransfer.setData("text/plain", "battery");
-});
+/*********** VARIABLES ***********/
+let username = "";
+let hearts = 100;
+let level = 1;
 
+/*********** NIVELES ***********/
+const levels = [
+  {
+    instruction: "¿Cuál objeto NECESITA energía?",
+    correct: "car",
+    objects: [
+      { id: "chair", emoji: "🪑", name: "Silla" },
+      { id: "bike", emoji: "🚲", name: "Bicicleta" },
+      { id: "car", emoji: "🚗", name: "Carro" }
+    ]
+  },
+  {
+    instruction: "¿Cuál objeto NO necesita energía?",
+    correct: "book",
+    objects: [
+      { id: "lamp", emoji: "💡", name: "Lámpara" },
+      { id: "tv", emoji: "📺", name: "Televisor" },
+      { id: "book", emoji: "📘", name: "Libro" }
+    ]
+  }
+];
+
+/*********** INICIO ***********/
+function startGame() {
+  username = document.getElementById("usernameInput").value.trim();
+  if (!username) {
+    alert("Escribe tu nombre");
+    return;
+  }
+  document.getElementById("nameScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  loadLevel();
+}
+
+/*********** CARGAR NIVEL ***********/
 function loadLevel() {
-  locked = false;
-  objectsEl.innerHTML = "";
-  messageEl.textContent = "";
-  levelText.textContent = levels[level].title;
-  instruction.textContent = levels[level].instruction;
-  heartsEl.textContent = hearts;
+  const lvl = levels[level - 1];
+  document.getElementById("instruction").textContent = lvl.instruction;
+  const zone = document.getElementById("objectsZone");
+  zone.innerHTML = "";
 
-  // Mostrar u ocultar energía según nivel
-  energyZone.style.display = levels[level].mode === "drag" ? "block" : "none";
-
-  levels[level].objects.forEach(obj => {
+  lvl.objects.forEach(obj => {
     const div = document.createElement("div");
     div.className = "object";
-    div.innerHTML = `${obj.icon}<span>${obj.name}</span>`;
-
-    if (levels[level].mode === "drag") {
-      div.addEventListener("dragover", e => e.preventDefault());
-      div.addEventListener("drop", () => {
-        if (locked) return;
-        checkAnswer(obj.needsEnergy, true);
-      });
-    } else {
-      div.addEventListener("click", () => {
-        if (locked) return;
-        checkAnswer(!obj.needsEnergy, false);
-      });
-    }
-
-    objectsEl.appendChild(div);
+    div.innerHTML = `${obj.emoji}<span>${obj.name}</span>`;
+    div.onclick = () => checkAnswer(obj.id);
+    zone.appendChild(div);
   });
 }
 
-function checkAnswer(correct, energyMode) {
-  if (correct) {
-    locked = true;
-    messageEl.textContent = "✅ ¡Muy bien! Respuesta correcta.";
-    messageEl.style.color = "green";
+/*********** RESPUESTA ***********/
+function checkAnswer(selected) {
+  const correct = levels[level - 1].correct;
+  const msg = document.getElementById("message");
 
-    setTimeout(() => {
-      if (level < 2) {
-        level++;
-        loadLevel();
-      } else {
-        messageEl.textContent = "🎉 ¡Excelente! Terminaste el juego.";
-      }
-    }, 1500);
-
+  if (selected === correct) {
+    msg.textContent = "✅ ¡Correcto!";
+    nextLevel();
   } else {
     hearts -= 10;
     if (hearts < 50) hearts = 50;
-    heartsEl.textContent = hearts;
-
-    messageEl.textContent = "❌ No es correcto. Intenta de nuevo.";
-    messageEl.style.color = "red";
+    document.getElementById("hearts").textContent = hearts;
+    msg.textContent = "❌ Incorrecto (-10 corazones)";
   }
 }
 
-loadLevel();
+/*********** SIGUIENTE NIVEL ***********/
+function nextLevel() {
+  if (level < levels.length) {
+    level++;
+    setTimeout(loadLevel, 1000);
+  } else {
+    endGame();
+  }
+}
+
+/*********** FINAL ***********/
+async function endGame() {
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("rankingScreen").classList.remove("hidden");
+
+  await savePoints();
+  await loadRanking();
+}
+
+/*********** SUPABASE ***********/
+async function savePoints() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/users?lw_user_id=eq.${username}`, {
+    headers
+  });
+  const data = await res.json();
+
+  if (data.length === 0) {
+    await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ lw_user_id: username, total_points: hearts })
+    });
+  } else {
+    const total = data[0].total_points + hearts;
+    await fetch(`${SUPABASE_URL}/rest/v1/users?lw_user_id=eq.${username}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ total_points: total })
+    });
+  }
+}
+
+async function loadRanking() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=lw_user_id,total_points&order=total_points.desc&limit=10`, {
+    headers
+  });
+  const data = await res.json();
+  const list = document.getElementById("rankingList");
+  list.innerHTML = "";
+
+  data.forEach(u => {
+    const li = document.createElement("li");
+    li.textContent = `${u.lw_user_id} - ${u.total_points} pts`;
+    list.appendChild(li);
+  });
+}

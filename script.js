@@ -92,6 +92,8 @@ function nextLevel() {
 
 /*********** FINAL ***********/
 async function endGame() {
+
+  console.log("FIN DEL JUEGO - guardando puntos");
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("rankingScreen").classList.remove("hidden");
 
@@ -101,6 +103,7 @@ async function endGame() {
 
 /*********** SUPABASE ***********/
 async function savePoints() {
+  console.log("Intentando guardar puntos:", username, hearts);
   const res = await fetch(`${SUPABASE_URL}/rest/v1/users?lw_user_id=eq.${username}`, {
     headers
   });

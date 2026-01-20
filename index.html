@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>¿Quién necesita energía?</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Juego de Energía</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="game-container">
-
-  <!-- PANTALLA NOMBRE -->
-  <div id="nameScreen">
-    <h1>⚡ Juego de Energía</h1>
-    <p>Escribe tu nombre para empezar</p>
-    <input type="text" id="usernameInput" placeholder="Tu nombre">
-    <button onclick="startGame()">Comenzar</button>
-  </div>
+<div class="main-container">
 
   <!-- JUEGO -->
-  <div id="gameScreen" class="hidden">
+  <div class="game-container">
+    <h1>⚡ ¿Quién necesita energía?</h1>
+
     <div class="info">
-      <span>❤️ Corazones: <b id="hearts">100</b></span>
+      <span>❤️ Corazones: <strong id="hearts">100</strong></span>
+      <span>👤 Jugador: <strong id="playerName">---</strong></span>
     </div>
 
-    <h2 id="instruction"></h2>
+    <p class="instruction" id="instruction">
+      Arrastra la energía al objeto que la necesita
+    </p>
 
-    <div class="objects-zone" id="objectsZone"></div>
+    <div class="battery-zone">
+      <div id="battery">🔋</div>
+    </div>
+
+    <div class="objects-zone">
+      <div class="object" data-needs-energy="true">📺<span>Televisor</span></div>
+      <div class="object" data-needs-energy="false">🪑<span>Silla</span></div>
+    </div>
 
     <p class="message" id="message"></p>
   </div>
 
   <!-- RANKING -->
-  <div id="rankingScreen" class="hidden">
+  <div class="ranking-container">
     <h2>🏆 Ranking</h2>
-    <ul id="rankingList"></ul>
-    <button onclick="location.reload()">Volver a jugar</button>
+    <ul id="rankingList">
+      <li>Cargando...</li>
+    </ul>
   </div>
 
 </div>

@@ -1,114 +1,47 @@
-const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
-const SUPABASE_KEY = "TU_ANON_KEY_AQUI";
-
-// PANTALLAS
-const loginScreen = document.getElementById("loginScreen");
-const gameScreen = document.getElementById("gameScreen");
-
-// ESTADO
-let playerName = "";
-let hearts = 100;
-let level = 1;
-
-// NIVELES
-const levels = [
-  {
-    question: "¿Cuál necesita energía?",
-    objects: [
-      { text: "Televisor 📺", correct: true },
-      { text: "Silla 🪑", correct: false }
-    ]
-  },
-  {
-    question: "¿Cuál NO necesita energía?",
-    objects: [
-      { text: "Libro 📘", correct: true },
-      { text: "Lámpara 💡", correct: false }
-    ]
+/* =====================
+   LOGIN
+===================== */
+function login() {
+  const name = document.getElementById("nickname").value.trim();
+  if (!name) {
+    alert("Escribe un nombre");
+    return;
   }
-];
-
-// 👉 CAMBIO DE PANTALLA (COMO PASAR DE NIVEL)
-function startGame() {
-  const input = document.getElementById("playerNameInput").value.trim();
-  if (!input) return alert("Escribe tu nombre");
-
-  playerName = input;
-  document.getElementById("playerName").textContent = playerName;
-
-  loginScreen.classList.remove("active");
-  gameScreen.classList.add("active");
-
-  loadLevel();
-  loadRanking();
+  localStorage.setItem("playerName", name);
+  window.location.href = "game.html";
 }
 
-// JUEGO
-function loadLevel() {
-  const data = levels[level - 1];
-  document.getElementById("instruction").textContent = data.question;
-  document.getElementById("levelTitle").textContent = `Nivel ${level}`;
+/* =====================
+   JUEGO
+===================== */
+if (document.body.id === "game") {
 
-  const container = document.getElementById("objects");
-  container.innerHTML = "";
+  const name = localStorage.getItem("playerName");
+  if (!name) {
+    window.location.href = "index.html";
+  }
 
-  data.objects.forEach(obj => {
-    const btn = document.createElement("button");
-    btn.textContent = obj.text;
-    btn.onclick = () => answer(obj.correct);
-    container.appendChild(btn);
-  });
-}
+  document.getElementById("playerName").textContent = name;
 
-async function answer(correct) {
-  if (!correct) {
+  let hearts = 100;
+  let points = 0;
+
+  function correct() {
+    points += 10;
+    document.getElementById("message").textContent = "✅ Correcto +10 puntos";
+    updateRanking();
+  }
+
+  function wrong() {
     hearts -= 10;
     document.getElementById("hearts").textContent = hearts;
-  } else {
-    level++;
-    if (level > levels.length) level = 1;
+    document.getElementById("message").textContent = "❌ Incorrecto -10 corazones";
   }
 
-  await saveScore();
-  loadRanking();
-  loadLevel();
-}
+  function updateRanking() {
+    const list = document.getElementById("rankingList");
+    list.innerHTML = `<li>${name} — ${points} pts</li>`;
+  }
 
-// SUPABASE
-async function saveScore() {
-  await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json",
-      Prefer: "resolution=merge-duplicates"
-    },
-    body: JSON.stringify({
-      lw_user_id: playerName,
-      total_points: hearts
-    })
-  });
-}
-
-async function loadRanking() {
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/users?select=lw_user_id,total_points&order=total_points.desc&limit=10`,
-    {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`
-      }
-    }
-  );
-
-  const data = await res.json();
-  const list = document.getElementById("ranking");
-  list.innerHTML = "";
-
-  data.forEach((u, i) => {
-    const li = document.createElement("li");
-    li.textContent = `${i + 1}. ${u.lw_user_id} - ${u.total_points}`;
-    list.appendChild(li);
-  });
+  updateRanking();
 }

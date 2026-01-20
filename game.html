@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego | Energía</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="game">
+
+  <div class="game-layout">
+
+    <!-- JUEGO -->
+    <div class="game-card">
+      <h2>⚡ ¿Quién necesita energía?</h2>
+
+      <div class="info-bar">
+        <span>❤️ Corazones: <b id="hearts">100</b></span>
+        <span>👤 <b id="playerName"></b></span>
+      </div>
+
+      <p id="instruction">Arrastra la energía al objeto que la necesita</p>
+
+      <div class="energy">🔋</div>
+
+      <div class="objects">
+        <div class="object correct" onclick="correct()">📺<span>Televisor</span></div>
+        <div class="object wrong" onclick="wrong()">🪑<span>Silla</span></div>
+      </div>
+
+      <p id="message"></p>
+    </div>
+
+    <!-- RANKING -->
+    <div class="ranking-card">
+      <h3>🏆 Ranking</h3>
+      <ul id="rankingList">
+        <li>Cargando...</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

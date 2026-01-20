@@ -2,46 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Juego de Energía</title>
+  <title>Login | Juego de Energía</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body id="login">
 
-<!-- LOGIN -->
-<div id="loginScreen" class="screen active">
   <div class="login-card">
-    <h1>⚡ Juego de la Energía</h1>
-    <p>Escribe tu nombre</p>
-    <input id="playerNameInput" placeholder="Ej: Nico">
-    <button onclick="startGame()">Jugar</button>
+    <h1>⚡ Juego de Energía</h1>
+    <p>Escribe tu nickname</p>
+
+    <input type="text" id="nickname" placeholder="Tu nombre">
+    <button onclick="login()">Entrar a jugar</button>
   </div>
-</div>
 
-<!-- JUEGO -->
-<div id="gameScreen" class="screen">
-  <div class="main-container">
-
-    <div class="game-container">
-      <h1 id="levelTitle">Nivel 1</h1>
-
-      <div class="hud">
-        ❤️ <span id="hearts">100</span> |
-        👤 <span id="playerName"></span>
-      </div>
-
-      <p id="instruction"></p>
-      <div id="objects" class="objects-zone"></div>
-      <p id="message"></p>
-    </div>
-
-    <div class="ranking-container">
-      <h2>🏆 Ranking</h2>
-      <ul id="ranking"></ul>
-    </div>
-
-  </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

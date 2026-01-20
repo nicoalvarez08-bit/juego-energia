@@ -8,39 +8,38 @@
 <body>
 
 <!-- LOGIN -->
-<div id="loginScreen" class="login-screen">
-  <h1>⚡ Mundo de la Energía</h1>
-  <p>Escribe tu nickname</p>
-  <input type="text" id="nicknameInput" placeholder="Ej: NicoPro">
-  <button id="startBtn">🎮 JUGAR</button>
+<div id="loginScreen" class="screen active">
+  <div class="login-card">
+    <h1>⚡ Juego de la Energía</h1>
+    <p>Escribe tu nombre</p>
+    <input id="playerNameInput" placeholder="Ej: Nico">
+    <button onclick="startGame()">Jugar</button>
+  </div>
 </div>
 
 <!-- JUEGO -->
-<div id="gameScreen" class="main-container hidden">
+<div id="gameScreen" class="screen">
+  <div class="main-container">
 
-  <div class="game-container">
-    <h1 id="levelTitle">Nivel 1</h1>
+    <div class="game-container">
+      <h1 id="levelTitle">Nivel 1</h1>
 
-    <div class="hud">
-      <span>❤️ <strong id="hearts">100</strong></span>
-      <span>👤 <strong id="playerName"></strong></span>
-      <span>⭐ Nivel <strong id="level">1</strong></span>
+      <div class="hud">
+        ❤️ <span id="hearts">100</span> |
+        👤 <span id="playerName"></span>
+      </div>
+
+      <p id="instruction"></p>
+      <div id="objects" class="objects-zone"></div>
+      <p id="message"></p>
     </div>
 
-    <p id="instruction"></p>
+    <div class="ranking-container">
+      <h2>🏆 Ranking</h2>
+      <ul id="ranking"></ul>
+    </div>
 
-    <div class="energy-zone" id="energyIcon">🔋</div>
-
-    <div class="objects-zone" id="objectsZone"></div>
-
-    <p class="message" id="message"></p>
   </div>
-
-  <div class="ranking-container">
-    <h2>🏆 Ranking</h2>
-    <ul id="rankingList"></ul>
-  </div>
-
 </div>
 
 <script src="script.js"></script>

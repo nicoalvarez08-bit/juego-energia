@@ -1,74 +1,80 @@
 const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
 const SUPABASE_KEY = "TU_ANON_KEY_AQUI";
 
-let username = "";
+// PANTALLAS
+const loginScreen = document.getElementById("loginScreen");
+const gameScreen = document.getElementById("gameScreen");
+
+// ESTADO
+let playerName = "";
 let hearts = 100;
 let level = 1;
 
+// NIVELES
 const levels = [
   {
-    instruction: "¿Cuál necesita energía?",
-    energy: "🔋",
+    question: "¿Cuál necesita energía?",
     objects: [
-      { icon: "📺", name: "Televisor", correct: true },
-      { icon: "🪑", name: "Silla", correct: false }
+      { text: "Televisor 📺", correct: true },
+      { text: "Silla 🪑", correct: false }
     ]
   },
   {
-    instruction: "¿Cuál NO necesita energía?",
-    energy: "⚡",
+    question: "¿Cuál NO necesita energía?",
     objects: [
-      { icon: "💡", name: "Lámpara", correct: false },
-      { icon: "📖", name: "Libro", correct: true }
+      { text: "Libro 📘", correct: true },
+      { text: "Lámpara 💡", correct: false }
     ]
   }
 ];
 
-// LOGIN
-document.getElementById("startBtn").onclick = () => {
-  const input = document.getElementById("nicknameInput").value.trim();
-  if (!input) return alert("Escribe un nickname");
+// 👉 CAMBIO DE PANTALLA (COMO PASAR DE NIVEL)
+function startGame() {
+  const input = document.getElementById("playerNameInput").value.trim();
+  if (!input) return alert("Escribe tu nombre");
 
-  username = input;
-  document.getElementById("playerName").textContent = username;
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.remove("hidden");
+  playerName = input;
+  document.getElementById("playerName").textContent = playerName;
+
+  loginScreen.classList.remove("active");
+  gameScreen.classList.add("active");
 
   loadLevel();
   loadRanking();
-};
+}
 
+// JUEGO
 function loadLevel() {
   const data = levels[level - 1];
-  document.getElementById("instruction").textContent = data.instruction;
-  document.getElementById("energyIcon").textContent = data.energy;
-  document.getElementById("level").textContent = level;
+  document.getElementById("instruction").textContent = data.question;
+  document.getElementById("levelTitle").textContent = `Nivel ${level}`;
 
-  const zone = document.getElementById("objectsZone");
-  zone.innerHTML = "";
+  const container = document.getElementById("objects");
+  container.innerHTML = "";
 
   data.objects.forEach(obj => {
-    const div = document.createElement("div");
-    div.className = "object";
-    div.innerHTML = `${obj.icon}<span>${obj.name}</span>`;
-    div.onclick = () => handleAnswer(obj.correct);
-    zone.appendChild(div);
+    const btn = document.createElement("button");
+    btn.textContent = obj.text;
+    btn.onclick = () => answer(obj.correct);
+    container.appendChild(btn);
   });
 }
 
-async function handleAnswer(correct) {
+async function answer(correct) {
   if (!correct) {
     hearts -= 10;
     document.getElementById("hearts").textContent = hearts;
   } else {
     level++;
     if (level > levels.length) level = 1;
-    loadLevel();
   }
+
   await saveScore();
   loadRanking();
+  loadLevel();
 }
 
+// SUPABASE
 async function saveScore() {
   await fetch(`${SUPABASE_URL}/rest/v1/users`, {
     method: "POST",
@@ -79,7 +85,7 @@ async function saveScore() {
       Prefer: "resolution=merge-duplicates"
     },
     body: JSON.stringify({
-      lw_user_id: username,
+      lw_user_id: playerName,
       total_points: hearts
     })
   });
@@ -95,9 +101,11 @@ async function loadRanking() {
       }
     }
   );
+
   const data = await res.json();
-  const list = document.getElementById("rankingList");
+  const list = document.getElementById("ranking");
   list.innerHTML = "";
+
   data.forEach((u, i) => {
     const li = document.createElement("li");
     li.textContent = `${i + 1}. ${u.lw_user_id} - ${u.total_points}`;

@@ -2,44 +2,43 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Juego | Energía</title>
+  <title>Juego de Energía ⚡</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body id="game">
+<body>
 
-  <div class="game-layout">
+<!-- LOGIN -->
+<div id="loginScreen" class="screen">
+  <h1>⚡ Bienvenido</h1>
+  <p>Escribe tu nickname para comenzar</p>
+  <input type="text" id="usernameInput" placeholder="Tu nombre">
+  <button onclick="login()">Entrar</button>
+</div>
 
-    <!-- JUEGO -->
-    <div class="game-card">
-      <h2>⚡ ¿Quién necesita energía?</h2>
-
-      <div class="info-bar">
-        <span>❤️ Corazones: <b id="hearts">100</b></span>
-        <span>👤 <b id="playerName"></b></span>
-      </div>
-
-      <p id="instruction">Arrastra la energía al objeto que la necesita</p>
-
-      <div class="energy">🔋</div>
-
-      <div class="objects">
-        <div class="object correct" onclick="correct()">📺<span>Televisor</span></div>
-        <div class="object wrong" onclick="wrong()">🪑<span>Silla</span></div>
-      </div>
-
-      <p id="message"></p>
-    </div>
-
-    <!-- RANKING -->
-    <div class="ranking-card">
-      <h3>🏆 Ranking</h3>
-      <ul id="rankingList">
-        <li>Cargando...</li>
-      </ul>
-    </div>
-
+<!-- JUEGO -->
+<div id="gameScreen" class="screen hidden">
+  <div class="top-bar">
+    <div>❤️ Puntos: <span id="score">100</span></div>
+    <div>👤 <span id="playerName"></span></div>
   </div>
 
-  <script src="script.js"></script>
+  <h2 id="levelTitle"></h2>
+  <p id="instruction"></p>
+
+  <div class="objects" id="objects"></div>
+
+  <div id="message" class="message hidden"></div>
+
+  <!-- RANKING -->
+  <div class="ranking">
+    <h3>🏆 Ranking</h3>
+    <ul id="rankingList"></ul>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

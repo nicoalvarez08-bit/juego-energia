@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Trebuchet MS", Arial;
+  font-family: "Comic Sans MS", Arial, sans-serif;
   background: linear-gradient(135deg, #6a5acd, #9370db);
   min-height: 100vh;
   display: flex;
@@ -8,89 +8,91 @@ body {
   align-items: center;
 }
 
-/* LOGIN */
-.login-card {
+.screen {
   background: white;
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
-  width: 320px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.login-card input {
-  width: 100%;
-  padding: 10px;
-  margin: 15px 0;
-  font-size: 16px;
-}
-
-.login-card button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #6a5acd;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* JUEGO */
-.game-layout {
-  display: flex;
-  gap: 20px;
-}
-
-.game-card, .ranking-card {
-  background: white;
+  width: 90%;
+  max-width: 800px;
   padding: 25px;
   border-radius: 20px;
+  text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-.game-card {
-  width: 450px;
+.hidden {
+  display: none;
 }
 
-.ranking-card {
-  width: 220px;
+input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #6a5acd;
 }
 
-.info-bar {
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a4abd;
+}
+
+.top-bar {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
-}
-
-.energy {
-  font-size: 60px;
-  margin: 15px 0;
+  font-size: 18px;
 }
 
 .objects {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 15px;
 }
 
 .object {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   background: #f0f0ff;
   border-radius: 15px;
-  font-size: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  border: 3px dashed #9370db;
+  font-size: 60px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.object span {
-  font-size: 14px;
+.object:hover {
+  background: #e0e0ff;
 }
 
-#message {
+.message {
   margin-top: 15px;
-  font-weight: bold;
+  padding: 10px;
+  background: #6a5acd;
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.ranking {
+  margin-top: 20px;
+  background: #f7f7ff;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.ranking ul {
+  list-style: none;
+  padding: 0;
 }

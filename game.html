@@ -2,43 +2,40 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Juego de Energía ⚡</title>
+  <title>Juego de Energía</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen" class="screen">
-  <h1>⚡ Bienvenido</h1>
-  <p>Escribe tu nickname para comenzar</p>
-  <input type="text" id="usernameInput" placeholder="Tu nombre">
-  <button onclick="login()">Entrar</button>
-</div>
-
-<!-- JUEGO -->
-<div id="gameScreen" class="screen hidden">
-  <div class="top-bar">
-    <div>❤️ Puntos: <span id="score">100</span></div>
-    <div>👤 <span id="playerName"></span></div>
+  <!-- LOGIN -->
+  <div id="login-screen" class="screen">
+    <h1>⚡ Juego de Energía</h1>
+    <input type="text" id="nicknameInput" placeholder="Ingresa tu nickname">
+    <button id="loginBtn">Entrar</button>
+    <p id="loginMessage"></p>
   </div>
 
-  <h2 id="levelTitle"></h2>
-  <p id="instruction"></p>
+  <!-- JUEGO -->
+  <div id="game-screen" class="screen hidden">
+    <h2>Jugador: <span id="playerName"></span></h2>
+    <p>Puntos: <span id="playerPoints">0</span></p>
 
-  <div class="objects" id="objects"></div>
+    <div class="game-area">
+      <div class="object" data-energy="false">🪑 Silla</div>
+      <div class="object" data-energy="false">🚲 Bicicleta</div>
+      <div class="object" data-energy="true">🚗 Carro</div>
+    </div>
 
-  <div id="message" class="message hidden"></div>
+    <div class="battery" draggable="true">🔋</div>
 
-  <!-- RANKING -->
-  <div class="ranking">
-    <h3>🏆 Ranking</h3>
-    <ul id="rankingList"></ul>
+    <p id="gameMessage"></p>
+
+    <h3>🏆 Ranking Global</h3>
+    <ul id="ranking"></ul>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>

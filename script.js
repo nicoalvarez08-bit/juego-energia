@@ -1,143 +1,111 @@
-/********* SUPABASE *********/
+// 🔌 SUPABASE CONFIG
 const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
 
 const supabase = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_ANON_KEY
+  SUPABASE_KEY
 );
 
-/********* ESTADO *********/
-let username = "";
-let score = 100;
-let level = 1;
+// ELEMENTOS
+const loginScreen = document.getElementById("login-screen");
+const gameScreen = document.getElementById("game-screen");
 
-/********* LOGIN *********/
-async function login() {
-  const input = document.getElementById("usernameInput");
-  username = input.value.trim();
+const nicknameInput = document.getElementById("nicknameInput");
+const loginBtn = document.getElementById("loginBtn");
+const loginMessage = document.getElementById("loginMessage");
 
-  if (!username) return;
+const playerName = document.getElementById("playerName");
+const playerPoints = document.getElementById("playerPoints");
+const gameMessage = document.getElementById("gameMessage");
 
-  localStorage.setItem("username", username);
+const battery = document.querySelector(".battery");
+const objects = document.querySelectorAll(".object");
+const rankingList = document.getElementById("ranking");
 
-  // crear usuario si no existe
-  const { data } = await supabase
-    .from("ranking")
+let currentUser = null;
+let points = 0;
+
+// 🔑 LOGIN
+loginBtn.addEventListener("click", async () => {
+  const nickname = nicknameInput.value.trim();
+  if (!nickname) return;
+
+  let { data } = await supabase
+    .from("users")
     .select("*")
-    .eq("username", username)
+    .eq("nickname", nickname)
     .single();
 
   if (!data) {
-    await supabase.from("ranking").insert({
-      username,
-      score: 100
-    });
+    const { data: newUser } = await supabase
+      .from("users")
+      .insert([{ nickname, total_points: 0 }])
+      .select()
+      .single();
+
+    currentUser = newUser;
   } else {
-    score = data.score;
+    currentUser = data;
   }
 
-  iniciarJuego();
+  points = currentUser.total_points;
+  startGame();
+});
+
+// 🎮 INICIAR JUEGO
+function startGame() {
+  loginScreen.classList.add("hidden");
+  gameScreen.classList.remove("hidden");
+
+  playerName.textContent = currentUser.nickname;
+  playerPoints.textContent = points;
+
+  loadRanking();
 }
 
-/********* INICIAR *********/
-function iniciarJuego() {
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.remove("hidden");
+// 🔋 DRAG & DROP
+battery.addEventListener("dragstart", () => {
+  gameMessage.textContent = "Arrastra la batería a un objeto";
+});
 
-  document.getElementById("playerName").textContent = username;
-  actualizarUI();
-  cargarNivel();
-  cargarRanking();
-}
+objects.forEach(obj => {
+  obj.addEventListener("dragover", e => e.preventDefault());
 
-/********* NIVELES *********/
-function cargarNivel() {
-  const title = document.getElementById("levelTitle");
-  const instruction = document.getElementById("instruction");
-  const objects = document.getElementById("objects");
+  obj.addEventListener("drop", async () => {
+    const needsEnergy = obj.dataset.energy === "true";
 
-  objects.innerHTML = "";
+    if (needsEnergy) {
+      points += 10;
+      gameMessage.textContent = "✅ Correcto, necesita energía";
+    } else {
+      points -= 5;
+      gameMessage.textContent = "❌ Incorrecto, no necesita energía";
+    }
 
-  if (level === 1) {
-    title.textContent = "Nivel 1";
-    instruction.textContent = "¿Qué objeto necesita energía?";
-    crearObjeto("🪑", false);
-    crearObjeto("🚲", false);
-    crearObjeto("🚗", true);
-  }
+    playerPoints.textContent = points;
 
-  if (level === 2) {
-    title.textContent = "Nivel 2";
-    instruction.textContent = "¿Cuál NO necesita energía?";
-    crearObjeto("💡", true);
-    crearObjeto("📺", true);
-    crearObjeto("📘", false);
-  }
-}
+    await supabase
+      .from("users")
+      .update({ total_points: points })
+      .eq("id", currentUser.id);
 
-function crearObjeto(icono, necesitaEnergia) {
-  const div = document.createElement("div");
-  div.className = "object";
-  div.textContent = icono;
+    loadRanking();
+  });
+});
 
-  div.onclick = () => verificar(necesitaEnergia);
-  document.getElementById("objects").appendChild(div);
-}
-
-/********* VERIFICAR *********/
-async function verificar(correcto) {
-  if (correcto) {
-    mostrarMensaje("✅ ¡Correcto!");
-    level++;
-    setTimeout(cargarNivel, 1500);
-  } else {
-    score -= 10;
-    if (score < 50) score = 50;
-
-    await actualizarScore();
-    actualizarUI();
-    mostrarMensaje("❌ Incorrecto (-10)");
-  }
-}
-
-/********* SCORE *********/
-async function actualizarScore() {
-  await supabase
-    .from("ranking")
-    .update({ score })
-    .eq("username", username);
-
-  cargarRanking();
-}
-
-function actualizarUI() {
-  document.getElementById("score").textContent = score;
-}
-
-/********* MENSAJE *********/
-function mostrarMensaje(texto) {
-  const msg = document.getElementById("message");
-  msg.textContent = texto;
-  msg.classList.remove("hidden");
-
-  setTimeout(() => msg.classList.add("hidden"), 2000);
-}
-
-/********* RANKING *********/
-async function cargarRanking() {
+// 🏆 RANKING
+async function loadRanking() {
   const { data } = await supabase
-    .from("ranking")
-    .select("username, score")
-    .order("score", { ascending: false })
+    .from("users")
+    .select("nickname, total_points")
+    .order("total_points", { ascending: false })
     .limit(5);
 
-  const list = document.getElementById("rankingList");
-  list.innerHTML = "";
-
-  data.forEach(u => {
+  rankingList.innerHTML = "";
+  data.forEach(user => {
     const li = document.createElement("li");
-    li.textContent = `${u.username} — ${u.score}`;
-    list.appendChild(li);
+    li.textContent = `${user.nickname} - ${user.total_points} pts`;
+    rankingList.appendChild(li);
   });
 }

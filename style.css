@@ -34,7 +34,7 @@ button {
 }
 
 .object {
-  width: 120px;
+  width: 140px;
   height: 120px;
   background: #1e293b;
   border-radius: 10px;
@@ -47,6 +47,7 @@ button {
 .battery {
   font-size: 40px;
   cursor: grab;
+  margin-bottom: 20px;
 }
 
 #ranking {

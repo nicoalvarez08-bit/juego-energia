@@ -1,4 +1,4 @@
-// 🔌 SUPABASE CONFIG
+// ================= SUPABASE CONFIG =================
 const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
 
@@ -7,7 +7,7 @@ const supabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-// ELEMENTOS
+// ================= ELEMENTOS =================
 const loginScreen = document.getElementById("login-screen");
 const gameScreen = document.getElementById("game-screen");
 
@@ -23,37 +23,56 @@ const battery = document.querySelector(".battery");
 const objects = document.querySelectorAll(".object");
 const rankingList = document.getElementById("ranking");
 
+// ================= ESTADO =================
 let currentUser = null;
 let points = 0;
 
-// 🔑 LOGIN
+// ================= LOGIN =================
 loginBtn.addEventListener("click", async () => {
   const nickname = nicknameInput.value.trim();
-  if (!nickname) return;
 
-  let { data } = await supabase
+  if (!nickname) {
+    loginMessage.textContent = "Escribe un nickname";
+    return;
+  }
+
+  loginMessage.textContent = "Cargando...";
+
+  const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("nickname", nickname)
-    .single();
+    .maybeSingle();
+
+  if (error) {
+    loginMessage.textContent = "Error de conexión";
+    console.error(error);
+    return;
+  }
 
   if (!data) {
-    const { data: newUser } = await supabase
+    const { data: newUser, error: insertError } = await supabase
       .from("users")
       .insert([{ nickname, total_points: 0 }])
       .select()
       .single();
+
+    if (insertError) {
+      loginMessage.textContent = "No se pudo crear el usuario";
+      console.error(insertError);
+      return;
+    }
 
     currentUser = newUser;
   } else {
     currentUser = data;
   }
 
-  points = currentUser.total_points;
+  points = currentUser.total_points || 0;
   startGame();
 });
 
-// 🎮 INICIAR JUEGO
+// ================= INICIAR JUEGO =================
 function startGame() {
   loginScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
@@ -64,9 +83,9 @@ function startGame() {
   loadRanking();
 }
 
-// 🔋 DRAG & DROP
+// ================= DRAG & DROP =================
 battery.addEventListener("dragstart", () => {
-  gameMessage.textContent = "Arrastra la batería a un objeto";
+  gameMessage.textContent = "Arrastra la batería al objeto correcto";
 });
 
 objects.forEach(obj => {
@@ -94,7 +113,7 @@ objects.forEach(obj => {
   });
 });
 
-// 🏆 RANKING
+// ================= RANKING =================
 async function loadRanking() {
   const { data } = await supabase
     .from("users")
@@ -103,6 +122,7 @@ async function loadRanking() {
     .limit(5);
 
   rankingList.innerHTML = "";
+
   data.forEach(user => {
     const li = document.createElement("li");
     li.textContent = `${user.nickname} - ${user.total_points} pts`;

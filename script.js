@@ -1,6 +1,7 @@
 // ================= SUPABASE =================
 const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
 
 const supabase = window.supabase.createClient(
   SUPABASE_URL,
@@ -30,6 +31,7 @@ let points = 0;
 // ================= LOGIN =================
 loginBtn.addEventListener("click", async () => {
   const nickname = nicknameInput.value.trim();
+
   if (!nickname) {
     loginMessage.textContent = "Escribe un nickname";
     return;
@@ -44,7 +46,7 @@ loginBtn.addEventListener("click", async () => {
     .maybeSingle();
 
   if (error) {
-    loginMessage.textContent = "Error de base de datos";
+    loginMessage.textContent = "Error al conectar con la base de datos";
     console.error(error);
     return;
   }
@@ -62,7 +64,7 @@ loginBtn.addEventListener("click", async () => {
 
     points = 0;
   } else {
-    points = data.total_points;
+    points = data.total_points || 0;
   }
 
   currentNickname = nickname;
@@ -95,7 +97,7 @@ objects.forEach(obj => {
       points += 10;
       gameMessage.textContent = "✅ Correcto";
     } else {
-      points -= 5;
+      points = Math.max(0, points - 5);
       gameMessage.textContent = "❌ Incorrecto";
     }
 
@@ -112,11 +114,13 @@ objects.forEach(obj => {
 
 // ================= RANKING =================
 async function loadRanking() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("users")
     .select("nickname, total_points")
     .order("total_points", { ascending: false })
     .limit(5);
+
+  if (error) return;
 
   rankingList.innerHTML = "";
 

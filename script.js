@@ -1,4 +1,4 @@
-// ================= SUPABASE CONFIG =================
+// ================= SUPABASE =================
 const SUPABASE_URL = "https://gihfgjidbpfnsgwrvvxv.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpaGZnamlkYnBmbnNnd3J2dnh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDI0MzUsImV4cCI6MjA4NDA3ODQzNX0.EvT6r8wN0Aw-MoTSr2-ENzTKAS41A22ATj7ktsqXAzw";
 
@@ -24,13 +24,12 @@ const objects = document.querySelectorAll(".object");
 const rankingList = document.getElementById("ranking");
 
 // ================= ESTADO =================
-let currentUser = null;
+let currentNickname = "";
 let points = 0;
 
 // ================= LOGIN =================
 loginBtn.addEventListener("click", async () => {
   const nickname = nicknameInput.value.trim();
-
   if (!nickname) {
     loginMessage.textContent = "Escribe un nickname";
     return;
@@ -45,17 +44,15 @@ loginBtn.addEventListener("click", async () => {
     .maybeSingle();
 
   if (error) {
-    loginMessage.textContent = "Error de conexión";
+    loginMessage.textContent = "Error de base de datos";
     console.error(error);
     return;
   }
 
   if (!data) {
-    const { data: newUser, error: insertError } = await supabase
+    const { error: insertError } = await supabase
       .from("users")
-      .insert([{ nickname, total_points: 0 }])
-      .select()
-      .single();
+      .insert([{ nickname, total_points: 0 }]);
 
     if (insertError) {
       loginMessage.textContent = "No se pudo crear el usuario";
@@ -63,12 +60,12 @@ loginBtn.addEventListener("click", async () => {
       return;
     }
 
-    currentUser = newUser;
+    points = 0;
   } else {
-    currentUser = data;
+    points = data.total_points;
   }
 
-  points = currentUser.total_points || 0;
+  currentNickname = nickname;
   startGame();
 });
 
@@ -77,7 +74,7 @@ function startGame() {
   loginScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
 
-  playerName.textContent = currentUser.nickname;
+  playerName.textContent = currentNickname;
   playerPoints.textContent = points;
 
   loadRanking();
@@ -96,10 +93,10 @@ objects.forEach(obj => {
 
     if (needsEnergy) {
       points += 10;
-      gameMessage.textContent = "✅ Correcto, necesita energía";
+      gameMessage.textContent = "✅ Correcto";
     } else {
       points -= 5;
-      gameMessage.textContent = "❌ Incorrecto, no necesita energía";
+      gameMessage.textContent = "❌ Incorrecto";
     }
 
     playerPoints.textContent = points;
@@ -107,7 +104,7 @@ objects.forEach(obj => {
     await supabase
       .from("users")
       .update({ total_points: points })
-      .eq("id", currentUser.id);
+      .eq("nickname", currentNickname);
 
     loadRanking();
   });
